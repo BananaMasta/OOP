@@ -1,35 +1,30 @@
-package oop.floor;
+package OOP.model;
 
-import oop.base_entities.Vehicle;
-import oop.base_entities.VehicleTypes;
-import oop.space.AbstractSpace;
-import oop.space.Space;
+import OOP.model.Vehicle;
+import OOP.model.Space;
 
 public interface Floor {
 
-    boolean add(AbstractSpace abstractSpace);
+    boolean add(Space space);
 
-    boolean add(int index, AbstractSpace abstractSpace);
+    boolean add(int index, Space space);
 
-    AbstractSpace get(int index);
+    Space get(int index);
 
-    AbstractSpace get(String registrationNumber);
+    Space get(String registrationNumber);
 
     boolean hasSpace(String registrationNumber);
 
-    AbstractSpace set(int index, AbstractSpace abstractSpace);
+    Space set(int index, Space space);
 
-    AbstractSpace remove(int index);
+    Space remove(int index);
 
-    AbstractSpace remove(String registrationNumber);
+    Space remove(String registrationNumber);
 
     int size();
 
-    AbstractSpace[] getSpaces();
+    Space[] getSpaces();
 
     Vehicle[] getVehicles();
 
-    Space[] getSpaces(VehicleTypes vehicleType);
-
-    Space[] getEmptySpaces();
 }

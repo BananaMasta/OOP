@@ -1,19 +1,16 @@
-package oop.base_entities;
+package OOP.model;
 
-public final class Vehicle {
-    public static final Vehicle NO_VEHICLE = new Vehicle("", "", "", VehicleTypes.NONE);
+public class Vehicle {
     private String registrationNumber, vendor, model;
-    VehicleTypes type;
 
-    public Vehicle(VehicleTypes type) {
-        this("", "", "", type);
+    public Vehicle() {
+        this("", "", "");
     }
 
-    public Vehicle(String registrationNumber, String vendor, String model, VehicleTypes type) {
+    public Vehicle(String registrationNumber, String vendor, String model) {
         this.registrationNumber = registrationNumber;
         this.vendor = vendor;
         this.model = model;
-        this.type = type;
     }
 
     public String getRegistrationNumber() {
@@ -38,13 +35,5 @@ public final class Vehicle {
 
     public void setModel(String model) {
         this.model = model;
-    }
-
-    public VehicleTypes getType() {
-        return type;
-    }
-
-    public void setType(VehicleTypes type) {
-        this.type = type;
     }
 }

@@ -1,4 +1,4 @@
-package oop.floor;
+package OOP.model;
 
 public class Node<T> {
 

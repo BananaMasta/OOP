@@ -1,18 +1,31 @@
-package oop.space;
+package OOP.model;
 
-import oop.base_entities.Person;
-import oop.base_entities.Vehicle;
+import OOP.model.Person;
+import OOP.model.Vehicle;
 
-public interface Space {
+public abstract class Space {
 
-    Person getPerson();
+    protected Person person;
+    protected Vehicle vehicle;
 
-    void setPerson(Person person);
+    public Person getPerson() {
+        return person;
+    }
 
-    Vehicle getVehicle();
+    public void setPerson(Person person) {
+        this.person = person;
+    }
 
-    void setVehicle(Vehicle vehicle);
+    public Vehicle getVehicle() {
+        return vehicle;
+    }
 
-    boolean IsEmpty();
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+    }
+
+    public boolean IsEmpty() {
+        return person == null || vehicle == null;
+    }
 
 }

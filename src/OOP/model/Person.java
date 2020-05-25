@@ -1,6 +1,6 @@
-package oop.base_entities;
+package OOP.model;
 
-public final class Person {
+public class Person {
     public static final Person NO_NAME = new Person("", "");
     private String firstName, lastName;
 

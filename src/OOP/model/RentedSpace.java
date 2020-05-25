@@ -1,20 +1,17 @@
-package oop.space;
+package OOP.model;
 
-import oop.base_entities.Person;
-import oop.base_entities.Vehicle;
+import OOP.model.Person;
+import OOP.model.Vehicle;
 
-public class RentedSpace extends AbstractSpace {
+public class RentedSpace extends Space {
 
     public RentedSpace() {
-        super();
-    }
-
-    public RentedSpace(Person person) {
-        super(person);
+        this(Person.NO_NAME, new Vehicle());
     }
 
     public RentedSpace(Person person, Vehicle vehicle) {
-        super(person, vehicle);
+        this.person = person;
+        this.vehicle = vehicle;
     }
 
 }

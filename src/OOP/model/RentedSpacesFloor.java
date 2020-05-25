@@ -1,13 +1,11 @@
-package oop.floor;
+package OOP.model;
 
-import oop.base_entities.Vehicle;
-import oop.base_entities.VehicleTypes;
-import oop.space.AbstractSpace;
-import oop.space.Space;
+import OOP.model.Vehicle;
+import OOP.model.Space;
 
 public class RentedSpacesFloor implements Floor {
 
-    private Node<AbstractSpace> head;
+    private Node<Space> head;
     private int size;
 
     public RentedSpacesFloor() {
@@ -15,49 +13,48 @@ public class RentedSpacesFloor implements Floor {
         size = 0;
     }
 
-    public RentedSpacesFloor(AbstractSpace... abstractSpaces) {
-        head = new Node<>(abstractSpaces[0]);
-        Node<AbstractSpace> node = head;
-        for (int i = 1; i < (size = abstractSpaces.length); node = node.next, i++) {
-            Node<AbstractSpace> newNode = new Node<>(abstractSpaces[i]);
+    public RentedSpacesFloor(Space... spaces) {
+        head = new Node<>(spaces[0]);
+        Node<Space> node = head;
+        for (int i = 1; i < (size = spaces.length); node = node.next, i++) {
+            Node<Space> newNode = new Node<>(spaces[i]);
             newNode.previous = node;
             node.next = newNode;
         }
     }
 
-    public boolean add(AbstractSpace abstractSpace) {
+    public boolean add(Space space) {
         size++;
-        Node<AbstractSpace> node = head;
+        Node<Space> node = head;
         while (node.next != null) {
             node = node.next;
         }
-        Node<AbstractSpace> newNode = new Node<>(abstractSpace);
+        Node<Space> newNode = new Node<>(space);
         newNode.previous = node;
         node.next = newNode;
         return true;
     }
 
-    public boolean add(int index, AbstractSpace abstractSpace) {
+    public boolean add(int index, Space space) {
         int i = 0;
-        Node<AbstractSpace> node = head;
+        Node<Space> node = head;
         while (node.next != null) {
             node = node.next;
             i++;
             if (i == index) {
-                Node<AbstractSpace> newNode = new Node<>(abstractSpace);
+                Node<Space> newNode = new Node<>(space);
                 newNode.next = node.next;
                 newNode.previous = node.previous;
                 node.previous.next = newNode;
-                size++;
                 return true;
             }
         }
         return false;
     }
 
-    public AbstractSpace get(int index) {
+    public Space get(int index) {
         int i = 0;
-        Node<AbstractSpace> node = head;
+        Node<Space> node = head;
         while (node.next != null) {
             node = node.next;
             i++;
@@ -68,8 +65,8 @@ public class RentedSpacesFloor implements Floor {
         return null;
     }
 
-    public AbstractSpace get(String registrationNumber) {
-        for (Node<AbstractSpace> node = head; node.next != null; node = node.next) {
+    public Space get(String registrationNumber) {
+        for (Node<Space> node = head; node.next != null; node = node.next) {
             if (node.value.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
                 return node.value;
             }
@@ -81,101 +78,69 @@ public class RentedSpacesFloor implements Floor {
         return get(registrationNumber) != null;
     }
 
-    public AbstractSpace set(int index, AbstractSpace abstractSpace) {
-        AbstractSpace replacedAbstractSpace = null;
+    public Space set(int index, Space space) {
+        Space replacedSpace = null;
         int i = 0;
-        Node<AbstractSpace> node = head;
+        Node<Space> node = head;
         while (node.next != null) {
             node = node.next;
             i++;
             if (i == index) {
-                replacedAbstractSpace = node.value;
-                node.value = abstractSpace;
+                replacedSpace = node.value;
+                node.value = space;
             }
         }
-        return replacedAbstractSpace;
+        return replacedSpace;
     }
 
-    public AbstractSpace remove(int index) {
-        AbstractSpace deletedAbstractSpace = null;
+    public Space remove(int index) {
+        Space deletedSpace = null;
         int i = 0;
-        Node<AbstractSpace> node = head;
+        Node<Space> node = head;
         while (node.next != null) {
             node = node.next;
             i++;
             if (i == index) {
-                deletedAbstractSpace = node.value;
+                deletedSpace = node.value;
                 node.previous = node.next;
-                size--;
             }
         }
-        return deletedAbstractSpace;
+        return deletedSpace;
     }
 
-    public AbstractSpace remove(String registrationNumber) {
-        AbstractSpace deletedAbstractSpace = null;
-        Node<AbstractSpace> node = head;
+    public Space remove(String registrationNumber) {
+        Space deletedSpace = null;
+        Node<Space> node = head;
         while (node.next != null) {
             node = node.next;
             if (node.value.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
-                deletedAbstractSpace = node.value;
+                deletedSpace = node.value;
                 node.previous = node.next;
-                size--;
             }
         }
-        return deletedAbstractSpace;
+        return deletedSpace;
     }
 
     public int size() {
         return size;
     }
 
-    public AbstractSpace[] getSpaces() {
-        AbstractSpace[] abstractSpaces = new AbstractSpace[size];
+    public Space[] getSpaces() {
+        Space[] spaces = new Space[size];
         int i = 0;
-        for (Node<AbstractSpace> node = head; node.next != null; node = node.next, i++) {
-            abstractSpaces[i] = node.value;
+        for (Node<Space> node = head; node.next != null; node = node.next, i++) {
+            spaces[i] = node.value;
         }
-        return abstractSpaces;
+        return spaces;
     }
 
     public Vehicle[] getVehicles() {
         Vehicle[] vehicles = new Vehicle[size];
         int i = 0;
-        for (Node<AbstractSpace> node = head; node.next != null; node = node.next, i++) {
+        for (Node<Space> node = head; node.next != null; node = node.next, i++) {
             vehicles[i] = node.value.getVehicle();
         }
         return vehicles;
-    }
-
-    @Override
-    public Space[] getSpaces(VehicleTypes vehicleType) {
-        Space[] averageResult = new Space[size];
-        int i = 0;
-        for (Node<AbstractSpace> node = head; node.next != null; node = node.next) {
-            if (node.value.getVehicle().getType().equals(vehicleType)) {
-                averageResult[i] = node.value;
-                i++;
-            }
-        }
-        Space[] result = new Space[i];
-        System.arraycopy(averageResult, 0, result, 0, i);
-        return result;
-    }
-
-    @Override
-    public Space[] getEmptySpaces() {
-        Space[] averageResult = new Space[size];
-        int i = 0;
-        for (Node<AbstractSpace> node = head; node.next != null; node = node.next) {
-            if (node.value.IsEmpty()) {
-                averageResult[i] = node.value;
-                i++;
-            }
-        }
-        Space[] result = new Space[i];
-        System.arraycopy(averageResult, 0, result, 0, i);
-        return result;
     }
 
 }
