@@ -3,29 +3,16 @@ package OOP.model;
 import OOP.model.Person;
 import OOP.model.Vehicle;
 
-public abstract class Space {
+public interface Space {
 
-    protected Person person;
-    protected Vehicle vehicle;
+    Person getPerson();
 
-    public Person getPerson() {
-        return person;
-    }
+    void setPerson(Person person);
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+    Vehicle getVehicle();
 
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
+    void setVehicle(Vehicle vehicle);
 
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
-
-    public boolean IsEmpty() {
-        return person == null || vehicle == null;
-    }
+    boolean IsEmpty();
 
 }

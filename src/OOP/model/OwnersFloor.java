@@ -1,11 +1,13 @@
 package OOP.model;
 
 import OOP.model.Vehicle;
+import OOP.model.VehicleTypes;
+import OOP.model.AbstractSpace;
 import OOP.model.Space;
 
 public class OwnersFloor implements Floor {
 
-    private Space[] spaces;
+    private AbstractSpace[] spaces;
     private int size;
 
     public OwnersFloor() {
@@ -13,28 +15,28 @@ public class OwnersFloor implements Floor {
     }
 
     public OwnersFloor(int initialCapasity) {
-        spaces = new Space[initialCapasity];
+        spaces = new AbstractSpace[initialCapasity];
         size = 0;
     }
 
-    public OwnersFloor(Space... spaces) {
+    public OwnersFloor(AbstractSpace... spaces) {
         this.spaces = spaces;
         size = spaces.length;
     }
 
-    public boolean add(Space space) {
-        Space[] copy = new Space[spaces.length + 1];
+    public boolean add(AbstractSpace abstractSpace) {
+        AbstractSpace[] copy = new AbstractSpace[spaces.length + 1];
         size++;
         System.arraycopy(spaces, 0, copy, 0, spaces.length);
-        copy[spaces.length] = space;
+        copy[spaces.length] = abstractSpace;
         spaces = copy;
         return true;
     }
 
-    public boolean add(int index, Space space) {
-        Space[] copy = new Space[spaces.length + 1];
+    public boolean add(int index, AbstractSpace abstractSpace) {
+        AbstractSpace[] copy = new AbstractSpace[spaces.length + 1];
         size++;
-        copy[index] = space;
+        copy[index] = abstractSpace;
         int i = 0, j = 0;
         while (j < copy.length) {
             if (copy[j] == null) {
@@ -47,14 +49,14 @@ public class OwnersFloor implements Floor {
         return true;
     }
 
-    public Space get(int index) {
+    public AbstractSpace get(int index) {
         return spaces[index];
     }
 
-    public Space get(String registrationNumber) {
-        for (Space space : spaces) {
-            if (space.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
-                return space;
+    public AbstractSpace get(String registrationNumber) {
+        for (AbstractSpace abstractSpace : spaces) {
+            if (abstractSpace.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
+                return abstractSpace;
             }
         }
         return null;
@@ -64,69 +66,99 @@ public class OwnersFloor implements Floor {
         return get(registrationNumber) != null;
     }
 
-    public Space set(int index, Space space) {
-        Space replacedSpace = null;
+    public AbstractSpace set(int index, AbstractSpace abstractSpace) {
+        AbstractSpace replacedAbstractSpace = null;
         for (int i = 0; i < spaces.length; i++) {
             if (i == index) {
-                replacedSpace = spaces[i];
-                spaces[i] = space;
+                replacedAbstractSpace = spaces[i];
+                spaces[i] = abstractSpace;
             }
         }
-        return replacedSpace;
+        return replacedAbstractSpace;
     }
 
-    public Space remove(int index) {
-        Space[] copy = new Space[spaces.length - 1];
-        Space deletedSpace = null;
+    public AbstractSpace remove(int index) {
+        AbstractSpace[] copy = new AbstractSpace[spaces.length - 1];
+        AbstractSpace deletedAbstractSpace = null;
         int i = 0, j = 0;
         while (i < spaces.length) {
             if (i != index) {
                 copy[j] = spaces[i];
                 j++;
             } else {
-                deletedSpace = spaces[i];
+                deletedAbstractSpace = spaces[i];
                 size--;
             }
             i++;
         }
         spaces = copy;
-        return deletedSpace;
+        return deletedAbstractSpace;
     }
 
-    public Space remove(String registrationNumber) {
-        Space[] copy = new Space[spaces.length - 1];
-        Space deletedSpace = null;
+    public AbstractSpace remove(String registrationNumber) {
+        AbstractSpace[] copy = new AbstractSpace[spaces.length - 1];
+        AbstractSpace deletedAbstractSpace = null;
         int i = 0, j = 0;
         while (i < spaces.length) {
             if (!spaces[i].getVehicle().getRegistrationNumber().equals(registrationNumber)) {
                 copy[j] = spaces[i];
                 j++;
             } else {
-                deletedSpace = spaces[i];
+                deletedAbstractSpace = spaces[i];
                 size--;
             }
             i++;
         }
         spaces = copy;
-        return deletedSpace;
+        return deletedAbstractSpace;
     }
 
     public int size() {
         return size;
     }
 
-    public Space[] getSpaces() {
+    public AbstractSpace[] getSpaces() {
         return spaces;
     }
 
     public Vehicle[] getVehicles() {
         Vehicle[] vehicles = new Vehicle[size];
         int i = 0;
-        for (Space space : spaces) {
-            vehicles[i] = space.getVehicle();
+        for (AbstractSpace abstractSpace : spaces) {
+            vehicles[i] = abstractSpace.getVehicle();
             i++;
         }
         return vehicles;
+    }
+
+    @Override
+    public Space[] getSpaces(VehicleTypes vehicleType) {
+        Space[] averageResult = new Space[spaces.length];
+        int i = 0;
+        for (AbstractSpace space : spaces) {
+            if (space.getVehicle().getType().equals(vehicleType)) {
+                averageResult[i] = (Space) space;
+                i++;
+            }
+        }
+        Space[] result = new Space[i];
+        System.arraycopy(averageResult, 0, result, 0, i);
+        return result;
+    }
+
+    @Override
+    public Space[] getEmptySpaces() {
+        Space[] averageResult = new Space[spaces.length];
+        int i = 0;
+        for (AbstractSpace space : spaces) {
+            if (space.IsEmpty()) {
+                averageResult[i] = (Space) space;
+                i++;
+            }
+        }
+        Space[] result = new Space[i];
+        System.arraycopy(averageResult, 0, result, 0, i);
+        return result;
     }
 
 }

@@ -1,7 +1,9 @@
 package OOP.model;
 
 import OOP.model.Vehicle;
+import OOP.model.VehicleTypes;
 import OOP.model.Floor;
+import OOP.model.AbstractSpace;
 import OOP.model.Space;
 
 public class Parking {
@@ -90,8 +92,8 @@ public class Parking {
         Vehicle[] vehicles = new Vehicle[size];
         int i = 0;
         for (Floor floor : floors)
-            for (Space space : floor.getSpaces()) {
-                vehicles[i] = space.getVehicle();
+            for (AbstractSpace abstractSpace : floor.getSpaces()) {
+                vehicles[i] = abstractSpace.getVehicle();
                 i++;
             }
         return vehicles;
@@ -112,36 +114,61 @@ public class Parking {
         return copy;
     }
 
-    public Space getSpace(String registrationNumber) {
+    public AbstractSpace getSpace(String registrationNumber) {
         for (Floor floor : floors) {
-            for (Space space : floor.getSpaces())
-                if (space.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
-                    return space;
+            for (AbstractSpace abstractSpace : floor.getSpaces())
+                if (abstractSpace.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
+                    return abstractSpace;
                 }
         }
         return null;
     }
 
-    public Space removeSpace(String registrationNumber) {
-        Space deletedSpace = null;
+    public AbstractSpace removeSpace(String registrationNumber) {
+        AbstractSpace deletedAbstractSpace = null;
         for (Floor floor : floors) {
-            for (Space space : floor.getSpaces())
-                if (space.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
-                    deletedSpace = floor.remove(registrationNumber);
+            for (AbstractSpace abstractSpace : floor.getSpaces())
+                if (abstractSpace.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
+                    deletedAbstractSpace = floor.remove(registrationNumber);
                     ;
                 }
         }
-        return deletedSpace;
+        return deletedAbstractSpace;
     }
 
-    public Space setSpace(String registrationNumber, Space space) {
-        Space replacedSpace = null;
+    public AbstractSpace setSpace(String registrationNumber, AbstractSpace abstractSpace) {
+        AbstractSpace replacedAbstractSpace = null;
         for (Floor floor : floors) {
             for (int i = 0; i < floor.getSpaces().length; i++)
-                if (space.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
-                    replacedSpace = floor.set(i, space);
+                if (abstractSpace.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
+                    replacedAbstractSpace = floor.set(i, abstractSpace);
                 }
         }
-        return replacedSpace;
+        return replacedAbstractSpace;
     }
+
+    public int emptySpacesQuantity() {
+        int result = 0;
+        for (Floor floor : floors) {
+            for (AbstractSpace space : floor.getSpaces()) {
+                if (space == null || space.IsEmpty()) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
+    public int vehiclesQuantity(VehicleTypes vehicleType) {
+        int result = 0;
+        for (Floor floor : floors) {
+            for (Vehicle vehicle : floor.getVehicles()) {
+                if (vehicle != null && vehicle.getType().equals(vehicleType)) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
 }

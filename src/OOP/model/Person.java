@@ -1,6 +1,6 @@
 package OOP.model;
 
-public class Person {
+public final class Person {
     public static final Person NO_NAME = new Person("", "");
     private String firstName, lastName;
 

@@ -3,11 +3,18 @@ package OOP.model;
 import OOP.model.Person;
 import OOP.model.Vehicle;
 
-public class OwnedSpace extends Space {
+public class OwnedSpace extends AbstractSpace {
+
+    public OwnedSpace() {
+        super();
+    }
+
+    public OwnedSpace(Person person) {
+        super(person);
+    }
 
     public OwnedSpace(Person person, Vehicle vehicle) {
-        this.person = person;
-        this.vehicle = vehicle;
+        super(person, vehicle);
     }
 
 }

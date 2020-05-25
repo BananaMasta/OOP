@@ -3,15 +3,18 @@ package OOP.model;
 import OOP.model.Person;
 import OOP.model.Vehicle;
 
-public class RentedSpace extends Space {
+public class RentedSpace extends AbstractSpace {
 
     public RentedSpace() {
-        this(Person.NO_NAME, new Vehicle());
+        super();
+    }
+
+    public RentedSpace(Person person) {
+        super(person);
     }
 
     public RentedSpace(Person person, Vehicle vehicle) {
-        this.person = person;
-        this.vehicle = vehicle;
+        super(person, vehicle);
     }
 
 }

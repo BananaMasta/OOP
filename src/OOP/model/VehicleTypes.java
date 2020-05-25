@@ -1,4 +1,4 @@
-package oop.base_entities;
+package OOP.model;
 
 public enum VehicleTypes {
     NONE,

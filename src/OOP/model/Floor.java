@@ -1,30 +1,35 @@
 package OOP.model;
 
 import OOP.model.Vehicle;
+import OOP.model.VehicleTypes;
+import OOP.model.AbstractSpace;
 import OOP.model.Space;
 
 public interface Floor {
 
-    boolean add(Space space);
+    boolean add(AbstractSpace abstractSpace);
 
-    boolean add(int index, Space space);
+    boolean add(int index, AbstractSpace abstractSpace);
 
-    Space get(int index);
+    AbstractSpace get(int index);
 
-    Space get(String registrationNumber);
+    AbstractSpace get(String registrationNumber);
 
     boolean hasSpace(String registrationNumber);
 
-    Space set(int index, Space space);
+    AbstractSpace set(int index, AbstractSpace abstractSpace);
 
-    Space remove(int index);
+    AbstractSpace remove(int index);
 
-    Space remove(String registrationNumber);
+    AbstractSpace remove(String registrationNumber);
 
     int size();
 
-    Space[] getSpaces();
+    AbstractSpace[] getSpaces();
 
     Vehicle[] getVehicles();
 
+    Space[] getSpaces(VehicleTypes vehicleType);
+
+    Space[] getEmptySpaces();
 }
