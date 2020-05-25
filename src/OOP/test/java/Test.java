@@ -1,20 +1,26 @@
-import oop.Parking;
-import oop.base_entities.Person;
-import oop.base_entities.Vehicle;
-import oop.floor.Floor;
-import oop.floor.OwnersFloor;
-import oop.floor.RentedSpacesFloor;
-import oop.space.OwnedSpace;
-import oop.space.RentedSpace;
-import oop.space.Space;
+import OOP.model.Parking;
+import OOP.model.Person;
+import OOP.model.Vehicle;
+import OOP.model.VehicleTypes;
+import OOP.model.Floor;
+import OOP.model.OwnersFloor;
+import OOP.model.RentedSpacesFloor;
+import OOP.model.OwnedSpace;
+import OOP.model.RentedSpace;
+import OOP.model.AbstractSpace;
+import OOP.model.Space;
 
 import static org.junit.Assert.*;
 
 public class Test {
-    RentedSpace testRentedSpace = new RentedSpace(
-            new Person("Name", "NotName"), new Vehicle("12345", "Reno", "Logan"));
-    OwnedSpace testSpace = new OwnedSpace(
-            new Person("Name", "NotName"), new Vehicle("12345", "Reno", "Logan"));
+    final int SPACES_ON_FLOOR_QUANTITY = 20,
+            FLOORS_QUANTITY = 10;
+
+    Person testPerson = new Person("Name", "NotName");
+    Vehicle testVehicle = new Vehicle("12345", "Reno", "Logan", VehicleTypes.TRUCK);
+
+    RentedSpace testRentedSpace = new RentedSpace(testPerson, testVehicle);
+    OwnedSpace testSpace = new OwnedSpace(testPerson, testVehicle);
 
     RentedSpacesFloor testRentedFloor = new RentedSpacesFloor(testSpace);
     OwnersFloor testFloor = new OwnersFloor(testSpace);
@@ -24,20 +30,20 @@ public class Test {
     Parking parking;
 
     public Test() {
-        floors = new Floor[10];
+        floors = new Floor[FLOORS_QUANTITY];
         for (int j = 0; j < floors.length; j++) {
-            Space[] spaces = new Space[20];
-            for (int i = 0; i < spaces.length; i++) {
+            AbstractSpace[] abstractSpaces = new AbstractSpace[SPACES_ON_FLOOR_QUANTITY];
+            for (int i = 0; i < abstractSpaces.length; i++) {
                 if (i % 2 == 0) {
-                    spaces[i] = new OwnedSpace(new Person("", ""), new Vehicle());
+                    abstractSpaces[i] = new OwnedSpace(new Person("", ""), Vehicle.NO_VEHICLE);
                 } else {
-                    spaces[i] = new RentedSpace(new Person("", ""), new Vehicle());
+                    abstractSpaces[i] = new RentedSpace(new Person("", ""), Vehicle.NO_VEHICLE);
                 }
             }
             if (j % 2 == 0) {
-                floors[j] = new OwnersFloor(spaces);
+                floors[j] = new OwnersFloor(abstractSpaces);
             } else {
-                floors[j] = new RentedSpacesFloor(spaces);
+                floors[j] = new RentedSpacesFloor(abstractSpaces);
             }
         }
         parking = new Parking(floors);
@@ -51,9 +57,11 @@ public class Test {
         assertTrue(parking.add(5, testFloor));
         assertEquals(testFloor, parking.get(5));
         assertEquals(testFloor, parking.set(5, testFloor));
+        assertEquals(1, parking.vehiclesQuantity(testVehicle.getType()));
         assertEquals(testFloor, parking.remove(5));
 
         assertArrayEquals(floors, parking.getFloors());
+        assertEquals(FLOORS_QUANTITY * SPACES_ON_FLOOR_QUANTITY, parking.emptySpacesQuantity());
     }
 
     @org.junit.Test
@@ -69,6 +77,11 @@ public class Test {
 
                 assertTrue(floor.add(5, testSpace));
                 assertEquals(testSpace, floor.set(5, testSpace));
+
+                Space[] testSpaceArray = new Space[1];
+                testSpaceArray[0] = testSpace;
+                assertArrayEquals(testSpaceArray, floor.getSpaces(testSpace.getVehicle().getType()));
+
                 assertEquals(testSpace, floor.remove(5));
             } else {
                 RentedSpacesFloor floor = (RentedSpacesFloor) floor1;
@@ -80,6 +93,11 @@ public class Test {
                 assertEquals(testRentedSpace, floor.set(6, testRentedSpace));
                 assertEquals(testRentedSpace, floor.get(6));
                 assertEquals(testRentedSpace, floor.get(testRentedSpace.getVehicle().getRegistrationNumber()));
+
+                Space[] testSpaceArray = new Space[1];
+                testSpaceArray[0] = testRentedSpace;
+                assertArrayEquals(testSpaceArray, floor.getSpaces(testRentedSpace.getVehicle().getType()));
+
                 assertEquals(testRentedSpace, floor.remove(6));
             }
         }
