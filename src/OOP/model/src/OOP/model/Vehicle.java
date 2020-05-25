@@ -1,4 +1,4 @@
-packageOOP.model;
+package OOP.model;
 
 public class Vehicle {
     private String registrationNumber, vendor, model;
