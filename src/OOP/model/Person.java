@@ -1,18 +1,19 @@
-package OOP.model;
+package oop.base_entities;
 
-public class Person {
-    private String FirstName;
-    private String SecondName;
-    private static final Person UNKNOWN_PERSON = new Person(" ", " ");
+public final class Person {
+    public static final Person NO_NAME = new Person("", "");
+    private String firstName, lastName;
 
-    public Person(String s, String s1) {
+    public Person(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public String getFirstName() {
-        return FirstName;
+        return firstName;
     }
 
-    public String getSecondName() {
-        return SecondName;
+    public String getLastName() {
+        return lastName;
     }
 }

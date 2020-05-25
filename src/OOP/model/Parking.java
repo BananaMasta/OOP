@@ -1,108 +1,174 @@
+package oop;
 
-package OOP.model;
-
-import java.util.*;
+import oop.base_entities.Vehicle;
+import oop.base_entities.VehicleTypes;
+import oop.floor.Floor;
+import oop.space.AbstractSpace;
+import oop.space.Space;
 
 public class Parking {
-    private OwnersFloor[] floors;
-    private int size = 0;
-    private Vehicle[] Vehicle;
-    private Space space;
+    Floor[] floors;
+    int size;
 
-    public boolean add(OwnersFloor floor) {
-        for (int i = 0; i < floors.length; i++) {
-            if (floors[i] == null) {
-                floors[i] = floor;
-
-                return true;
-            }
-        }
-
-        return false;
+    public Parking(int floorsQuantity) {
+        floors = new Floor[floorsQuantity];
+        size = 0;
     }
 
-    public boolean add(int index, OwnersFloor floor) {
-        if ((index >= floors.length) || (index < 0)) ;
-        OwnersFloor[] newOwnerFloor = new OwnersFloor[floors.length + 1];
+    public Parking(Floor[] floors) {
+        this.floors = floors;
+        size = floors.length;
+    }
+
+    public boolean add(Floor space) {
+        Floor[] copy = new Floor[floors.length + 1];
+        size++;
         for (int i = 0; i < floors.length; i++) {
-            newOwnerFloor[i] = floors[i];
+            copy[i] = floors[i];
         }
-        for (int i = newOwnerFloor.length; i >= index; i--) {
-            newOwnerFloor[index] = newOwnerFloor[i - 1];
-        }
-        newOwnerFloor[index] = (OwnersFloor) floor;
-        floors = newOwnerFloor;
+        copy[floors.length] = space;
+        floors = copy;
         return true;
     }
 
-    public OwnersFloor set(int index, OwnersFloor floor) {
-        if ((index >= floors.length) || (index < 0)) ;
-        this.floors[index] = (OwnersFloor) floor;
-        return floor;
+    public boolean add(int index, Floor space) {
+        Floor[] copy = new Floor[floors.length + 1];
+        size++;
+        copy[index] = space;
+        int i = 0, j = 0;
+        while (j < copy.length) {
+            if (copy[j] == null) {
+                copy[j] = floors[i];
+                i++;
+            }
+            j++;
+        }
+        floors = copy;
+        return true;
     }
 
-    public Space remove(int index) {
-        if ((index >= floors.length) || (index < 0)) ;
-        OwnersFloor[] newOwnerFloor = new OwnersFloor[floors.length - 1];
-        for (int i = 0; i < index; i++) {
-            newOwnerFloor[i] = floors[i];
+    public Floor get(int index) {
+        return floors[index];
+    }
+
+    public Floor set(int index, Floor space) {
+        Floor replacedSpace = null;
+        for (int i = 0; i < floors.length; i++) {
+            if (i == index) {
+                replacedSpace = floors[i];
+                floors[i] = space;
+            }
         }
-        for (int i = index + 1; i < floors.length; i++) {
-            newOwnerFloor[i - 1] = floors[i];
+        return replacedSpace;
+    }
+
+    public Floor remove(int index) {
+        Floor[] copy = new Floor[floors.length - 1];
+        Floor deletedSpace = null;
+        int i = 0, j = 0;
+        while (i < floors.length) {
+            if (i != index) {
+                copy[j] = floors[i];
+                j++;
+            } else {
+                deletedSpace = floors[i];
+                size--;
+            }
+            i++;
         }
-        floors = newOwnerFloor;
-        return space;
+        floors = copy;
+        return deletedSpace;
     }
 
     public int size() {
-        return floors.length;
+        return size;
     }
 
-    public OwnersFloor[] getFloors() {
+    public Floor[] getFloors() {
         return floors;
     }
 
-    public Vehicle[] getVehicle() {
-        return Vehicle;
+    public Vehicle[] getVehicles() {
+        Vehicle[] vehicles = new Vehicle[size];
+        int i = 0;
+        for (Floor floor : floors)
+            for (AbstractSpace abstractSpace : floor.getSpaces()) {
+                vehicles[i] = abstractSpace.getVehicle();
+                i++;
+            }
+        return vehicles;
     }
 
-    public OwnersFloor[] sortedBySizeFloors() {
-      //  Arrays.sort(floors);
-        for (int i = floors.length-1; i>0; i--)
-        {
-            for(int j = 0; j< i;j++)
-            {
-                if(Integer.parseInt(String.valueOf(floors[j])) > Integer.parseInt(String.valueOf(floors[j])))
-                {
-                    size = Integer.parseInt(String.valueOf(floors[j]));
-                    floors[j] = floors[j+1];
-                    floors[j+1] = size;
+    public Floor[] sortedBySizeFloors() {
+        Floor[] copy = new Floor[floors.length];
+        System.arraycopy(floors, 0, copy, 0, floors.length);
+        for (int i = 0; i < copy.length; i++) {
+            for (int j = 0; j < copy.length; j++) {
+                if (copy[i].size() < copy[j].size()) {
+                    Floor buffer = copy[i];
+                    copy[i] = copy[j];
+                    copy[j] = buffer;
                 }
             }
         }
-        return new OwnersFloor[0];
+        return copy;
     }
 
-    public Space removeSpace(String registrationNumber) {
-        int j = 0;
-        for (; j < floors.length; j++)        //поиск удаляемого элемента
-            if (floors.length == Integer.parseInt(registrationNumber))
-                break;
-        for (int k = j; k < floors.length - 1; k++) //сдвиг последующих элементов
-            floors[k] = floors[k + 1];                        //
-        OwnersFloor[] newFloors = new OwnersFloor[floors.length - 1];
-        floors = newFloors;
-        return space;
+    public AbstractSpace getSpace(String registrationNumber) {
+        for (Floor floor : floors) {
+            for (AbstractSpace abstractSpace : floor.getSpaces())
+                if (abstractSpace.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
+                    return abstractSpace;
+                }
+        }
+        return null;
     }
 
-    public Space setSpace(String registrationNumber, Space space)
-    {
-        int j = 0;
-        for (; j < floors.length; j++)
-            if (floors.length == Integer.parseInt(registrationNumber))
-                break;
-        OwnersFloor newRegistrationNumber = new OwnersFloor();
-        floors[j] = newRegistrationNumber;
-        return space;
+    public AbstractSpace removeSpace(String registrationNumber) {
+        AbstractSpace deletedAbstractSpace = null;
+        for (Floor floor : floors) {
+            for (AbstractSpace abstractSpace : floor.getSpaces())
+                if (abstractSpace.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
+                    deletedAbstractSpace = floor.remove(registrationNumber);
+                    ;
+                }
+        }
+        return deletedAbstractSpace;
     }
+
+    public AbstractSpace setSpace(String registrationNumber, AbstractSpace abstractSpace) {
+        AbstractSpace replacedAbstractSpace = null;
+        for (Floor floor : floors) {
+            for (int i = 0; i < floor.getSpaces().length; i++)
+                if (abstractSpace.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
+                    replacedAbstractSpace = floor.set(i, abstractSpace);
+                }
+        }
+        return replacedAbstractSpace;
+    }
+
+    public int emptySpacesQuantity() {
+        int result = 0;
+        for (Floor floor : floors) {
+            for (Space space : floor.getSpaces()) {
+                if (space == null || space.IsEmpty()) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
+    public int vehiclesQuantity(VehicleTypes vehicleType) {
+        int result = 0;
+        for (Floor floor : floors) {
+            for (Vehicle vehicle : floor.getVehicles()) {
+                if (vehicle != null && vehicle.getType().equals(vehicleType)) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
 }

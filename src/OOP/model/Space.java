@@ -1,27 +1,18 @@
-package OOP.model;
+package oop.space;
 
-public class Space extends Throwable {
-    private Vehicle vehicle;
-    private Person person;
+import oop.base_entities.Person;
+import oop.base_entities.Vehicle;
 
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
+public interface Space {
 
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
+    Person getPerson();
 
-    public Person getPerson() {
-        return person;
-    }
+    void setPerson(Person person);
 
-    public void setPerson(Person person) {
-        this.person = person;
-    }
+    Vehicle getVehicle();
 
-    public boolean isEmpty() {
-        return vehicle.equals(Vehicle.NO_VEHICLE);
-    }
+    void setVehicle(Vehicle vehicle);
+
+    boolean IsEmpty();
+
 }
-

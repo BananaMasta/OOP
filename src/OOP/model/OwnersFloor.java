@@ -1,101 +1,164 @@
-package OOP.model;
+package oop.floor;
 
-public class OwnersFloor
-{
-    private Space[] spaces;
-    private int size = 0;
-    private Vehicle[] vehicles;
+import oop.base_entities.Vehicle;
+import oop.base_entities.VehicleTypes;
+import oop.space.AbstractSpace;
+import oop.space.Space;
 
-    public boolean addSpace(Space space)
-    {
-        for(int i=0; i < spaces.length; i++)
-        {
-            if(spaces[i] == null)
-            {
-                spaces[i] = space;
-                return true;
-            }
-        }
+public class OwnersFloor implements Floor {
 
-        return false;
+    private AbstractSpace[] spaces;
+    private int size;
+
+    public OwnersFloor() {
+        this(16);
     }
-    public boolean addSpace(int index, Space space)
-    {
-      if (index == spaces.length)
-          space = new Space();
-        spaces[index] = space;
-      size = index + 1;
+
+    public OwnersFloor(int initialCapasity) {
+        spaces = new AbstractSpace[initialCapasity];
+        size = 0;
+    }
+
+    public OwnersFloor(AbstractSpace... spaces) {
+        this.spaces = spaces;
+        size = spaces.length;
+    }
+
+    public boolean add(AbstractSpace abstractSpace) {
+        AbstractSpace[] copy = new AbstractSpace[spaces.length + 1];
+        size++;
+        System.arraycopy(spaces, 0, copy, 0, spaces.length);
+        copy[spaces.length] = abstractSpace;
+        spaces = copy;
         return true;
     }
 
-    public Space[] getSpaces(int index)
-    {
-        return spaces;
-    }
-
-    public Space[] getSpaces(String registrationNumber)
-    {
-        return spaces;
-    }
-
-    public void hasSpace(String registrationNumber)
-    {
-        this.spaces = new Space[Integer.parseInt(registrationNumber)];
-        for (int i = 0; i < Integer.parseInt(registrationNumber); i++) {
-            spaces[i] = new Space();
+    public boolean add(int index, AbstractSpace abstractSpace) {
+        AbstractSpace[] copy = new AbstractSpace[spaces.length + 1];
+        size++;
+        copy[index] = abstractSpace;
+        int i = 0, j = 0;
+        while (j < copy.length) {
+            if (copy[j] == null) {
+                copy[j] = spaces[i];
+                i++;
+            }
+            j++;
         }
+        spaces = copy;
+        return true;
     }
 
-    public void setSpace(int index, Space space)
-    {
-        if ((index >= spaces.length) || (index < 0))
-        {
-            try {
-                throw new Space ();
-            } catch (Space spaces) {
-                space.printStackTrace();
+    public AbstractSpace get(int index) {
+        return spaces[index];
+    }
+
+    public AbstractSpace get(String registrationNumber) {
+        for (AbstractSpace abstractSpace : spaces) {
+            if (abstractSpace.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
+                return abstractSpace;
             }
         }
-        this.spaces[index] = (Space) space;
-    }
-
-    public Space removeSpace(int index) {
-        if ((index >= spaces.length) || (index < 0));
-        Space[] newSpace = new Space[spaces.length - 1];
-        for (int i = 0; i < index; i++) {
-            newSpace[i] = spaces[i];
-        }
-        for (int i = index + 1; i < spaces.length; i++) {
-            newSpace[i - 1] = spaces[i];
-        }
-
         return null;
     }
-    public Space[] remove(String registrationNumber) throws Exception
-    {
-        if ((Integer.parseInt(registrationNumber) >= spaces.length) || (Integer.parseInt(registrationNumber) < 0))
-        {
-            throw new Exception (registrationNumber);
+
+    public boolean hasSpace(String registrationNumber) {
+        return get(registrationNumber) != null;
+    }
+
+    public AbstractSpace set(int index, AbstractSpace abstractSpace) {
+        AbstractSpace replacedAbstractSpace = null;
+        for (int i = 0; i < spaces.length; i++) {
+            if (i == index) {
+                replacedAbstractSpace = spaces[i];
+                spaces[i] = abstractSpace;
+            }
         }
-        Space[] newSpace = new Space[spaces.length -1];
-        for (int i = 0; i < Integer.parseInt(registrationNumber); i++)
-        {
-            newSpace[i] = spaces[i];
+        return replacedAbstractSpace;
+    }
+
+    public AbstractSpace remove(int index) {
+        AbstractSpace[] copy = new AbstractSpace[spaces.length - 1];
+        AbstractSpace deletedAbstractSpace = null;
+        int i = 0, j = 0;
+        while (i < spaces.length) {
+            if (i != index) {
+                copy[j] = spaces[i];
+                j++;
+            } else {
+                deletedAbstractSpace = spaces[i];
+                size--;
+            }
+            i++;
         }
-        spaces = newSpace;
+        spaces = copy;
+        return deletedAbstractSpace;
+    }
+
+    public AbstractSpace remove(String registrationNumber) {
+        AbstractSpace[] copy = new AbstractSpace[spaces.length - 1];
+        AbstractSpace deletedAbstractSpace = null;
+        int i = 0, j = 0;
+        while (i < spaces.length) {
+            if (!spaces[i].getVehicle().getRegistrationNumber().equals(registrationNumber)) {
+                copy[j] = spaces[i];
+                j++;
+            } else {
+                deletedAbstractSpace = spaces[i];
+                size--;
+            }
+            i++;
+        }
+        spaces = copy;
+        return deletedAbstractSpace;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public AbstractSpace[] getSpaces() {
         return spaces;
     }
-    public int size()
-    {
-        return 0;
-    }
-    public Space[] getSpaces ()
-    {
-        return spaces;
-    }
-    public Vehicle[] getVehicles()
-    {
+
+    public Vehicle[] getVehicles() {
+        Vehicle[] vehicles = new Vehicle[size];
+        int i = 0;
+        for (AbstractSpace abstractSpace : spaces) {
+            vehicles[i] = abstractSpace.getVehicle();
+            i++;
+        }
         return vehicles;
     }
-}
 
+    @Override
+    public Space[] getSpaces(VehicleTypes vehicleType) {
+        Space[] averageResult = new Space[spaces.length];
+        int i = 0;
+        for (Space space : spaces) {
+            if (space.getVehicle().getType().equals(vehicleType)) {
+                averageResult[i] = space;
+                i++;
+            }
+        }
+        Space[] result = new Space[i];
+        System.arraycopy(averageResult, 0, result, 0, i);
+        return result;
+    }
+
+    @Override
+    public Space[] getEmptySpaces() {
+        Space[] averageResult = new Space[spaces.length];
+        int i = 0;
+        for (Space space : spaces) {
+            if (space.IsEmpty()) {
+                averageResult[i] = space;
+                i++;
+            }
+        }
+        Space[] result = new Space[i];
+        System.arraycopy(averageResult, 0, result, 0, i);
+        return result;
+    }
+
+}
