@@ -1,4 +1,4 @@
-package oop.base_entities;
+packageOOP.model;
 
 public class Vehicle {
     private String registrationNumber, vendor, model;
