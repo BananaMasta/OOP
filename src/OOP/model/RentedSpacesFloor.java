@@ -1,9 +1,8 @@
 package OOP.model;
 
-import OOP.model.Vehicle;
-import OOP.model.VehicleTypes;
-import OOP.model.AbstractSpace;
-import OOP.model.Space;
+import OOP.model.*;
+
+import java.util.Arrays;
 
 public class RentedSpacesFloor implements Floor {
 
@@ -148,13 +147,12 @@ public class RentedSpacesFloor implements Floor {
         return vehicles;
     }
 
-    @Override
     public Space[] getSpaces(VehicleTypes vehicleType) {
         Space[] averageResult = new Space[size];
         int i = 0;
         for (Node<AbstractSpace> node = head; node.next != null; node = node.next) {
             if (node.value.getVehicle().getType().equals(vehicleType)) {
-                averageResult[i] = (Space) node.value;
+                averageResult[i] = node.value;
                 i++;
             }
         }
@@ -163,13 +161,12 @@ public class RentedSpacesFloor implements Floor {
         return result;
     }
 
-    @Override
     public Space[] getEmptySpaces() {
         Space[] averageResult = new Space[size];
         int i = 0;
         for (Node<AbstractSpace> node = head; node.next != null; node = node.next) {
             if (node.value.IsEmpty()) {
-                averageResult[i] = (Space) node.value;
+                averageResult[i] = node.value;
                 i++;
             }
         }
@@ -178,4 +175,61 @@ public class RentedSpacesFloor implements Floor {
         return result;
     }
 
+    public boolean remove(Space space) {
+        return remove(indexOf(space)) == null;
+    }
+
+    public int indexOf(Space space) {
+        int i = 0;
+        for (Node<AbstractSpace> node = head; node.next != null; node = node.next, i++) {
+            if (node.value == space) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int spacesQuantity(Person person) {
+        int result = 0;
+        for (Node<AbstractSpace> node = head; node.next != null; node = node.next) {
+            if (node.value.getPerson().equals(person)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        int variable = head.hashCode();
+        for (Node<AbstractSpace> node = head.next; node.next != null; node = node.next) {
+            variable ^= node.hashCode();
+        }
+        return 53 * size * variable;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+        RentedSpacesFloor object = (RentedSpacesFloor) obj;
+        return object.size() == size &&
+                Arrays.equals(object.getSpaces(), getSpaces());
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("Rented spaces:").append(System.lineSeparator());
+        for (Node<AbstractSpace> node = head; node.next != null; node = node.next) {
+            result.append(node.value);
+        }
+        return result.toString();
+    }
 }

@@ -150,7 +150,7 @@ public class Parking {
     public int emptySpacesQuantity() {
         int result = 0;
         for (Floor floor : floors) {
-            for (AbstractSpace space : floor.getSpaces()) {
+            for (Space space : floor.getSpaces()) {
                 if (space == null || space.IsEmpty()) {
                     result++;
                 }
@@ -171,4 +171,12 @@ public class Parking {
         return result;
     }
 
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append(String.format("Floors (%s total):", size)).append(System.lineSeparator());
+        for (Floor floor : floors) {
+            result.append(floor);
+        }
+        return result.toString();
+    }
 }

@@ -1,9 +1,12 @@
 package OOP.model;
 
+import OOP.model.Person;
 import OOP.model.Vehicle;
 import OOP.model.VehicleTypes;
 import OOP.model.AbstractSpace;
 import OOP.model.Space;
+
+import java.util.Collection;
 
 public interface Floor {
 
@@ -32,4 +35,22 @@ public interface Floor {
     Space[] getSpaces(VehicleTypes vehicleType);
 
     Space[] getEmptySpaces();
+
+    boolean remove(Space space);
+
+    int indexOf(Space space);
+
+    int spacesQuantity(Person person);
+
+    @Override
+    int hashCode();
+
+    @Override
+    boolean equals(Object obj);
+
+
+    Object clone() throws CloneNotSupportedException;
+
+    @Override
+    String toString();
 }

@@ -47,4 +47,34 @@ public final class Vehicle {
     public void setType(VehicleTypes type) {
         this.type = type;
     }
+
+    @Override
+    public int hashCode() {
+        return vendor.hashCode() *
+                model.hashCode() *
+                type.hashCode() *
+                registrationNumber.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+        Vehicle object = (Vehicle) obj;
+        return object.getType().equals(type) &&
+                object.getModel().equals(model) &&
+                object.getRegistrationNumber().equals(registrationNumber) &&
+                object.getVendor().equals(vendor);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s %s (%s) regNumber: %s", vendor, model, type, registrationNumber);
+    }
 }

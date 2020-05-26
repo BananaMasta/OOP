@@ -1,9 +1,12 @@
 package OOP.model;
 
+import OOP.model.Person;
 import OOP.model.Vehicle;
 import OOP.model.VehicleTypes;
 import OOP.model.AbstractSpace;
 import OOP.model.Space;
+
+import java.util.Arrays;
 
 public class OwnersFloor implements Floor {
 
@@ -135,9 +138,9 @@ public class OwnersFloor implements Floor {
     public Space[] getSpaces(VehicleTypes vehicleType) {
         Space[] averageResult = new Space[spaces.length];
         int i = 0;
-        for (AbstractSpace space : spaces) {
+        for (Space space : spaces) {
             if (space.getVehicle().getType().equals(vehicleType)) {
-                averageResult[i] = (Space) space;
+                averageResult[i] = space;
                 i++;
             }
         }
@@ -150,9 +153,9 @@ public class OwnersFloor implements Floor {
     public Space[] getEmptySpaces() {
         Space[] averageResult = new Space[spaces.length];
         int i = 0;
-        for (AbstractSpace space : spaces) {
+        for (Space space : spaces) {
             if (space.IsEmpty()) {
-                averageResult[i] = (Space) space;
+                averageResult[i] = space;
                 i++;
             }
         }
@@ -161,4 +164,60 @@ public class OwnersFloor implements Floor {
         return result;
     }
 
+    public boolean remove(Space space) {
+        return remove(indexOf(space)) == null;
+    }
+
+    public int indexOf(Space space) {
+        for (int i = 0; i < spaces.length; i++) {
+            if (spaces[i] == space) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int spacesQuantity(Person person) {
+        int result = 0;
+        for (Space space : spaces) {
+            if (space.getPerson().equals(person)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        int variable = spaces[0].hashCode();
+        for (int i = 1; i < spaces.length; i++) {
+            variable ^= spaces[i].hashCode();
+        }
+        return 71 * size * variable;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj.getClass() != this.getClass()) {
+            return false;
+        }
+        OwnersFloor object = (OwnersFloor) obj;
+        return object.size() == size &&
+                Arrays.equals(object.getSpaces(), getSpaces());
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder();
+        result.append("Rented spaces:").append(System.lineSeparator());
+        for (Space space : spaces) {
+            result.append(space);
+        }
+        return result.toString();
+    }
 }

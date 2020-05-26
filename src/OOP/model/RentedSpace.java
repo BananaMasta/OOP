@@ -17,4 +17,8 @@ public class RentedSpace extends AbstractSpace {
         super(person, vehicle);
     }
 
+    @Override
+    public int hashCode() {
+        return 53 * super.hashCode();
+    }
 }
