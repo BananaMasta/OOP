@@ -1,6 +1,5 @@
 package OOP.model;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -29,13 +28,13 @@ public class RentedSpacesFloor implements Floor {
         }
     }
 
-    public boolean add(AbstractSpace abstractSpace) {
+    public boolean add(Space space) {
         size++;
         Node<AbstractSpace> node = head;
         while (node.next != null) {
             node = node.next;
         }
-        Node<AbstractSpace> newNode = new Node<>(abstractSpace);
+        Node<AbstractSpace> newNode = new Node<>((AbstractSpace) space);
         newNode.previous = node;
         node.next = newNode;
         return true;
@@ -70,10 +69,6 @@ public class RentedSpacesFloor implements Floor {
             }
         }
         throw new NoSuchElementException();
-    }
-
-    public boolean hasSpace(String registrationNumber) {
-        return get(registrationNumber) != null;
     }
 
     public AbstractSpace set(int index, AbstractSpace abstractSpace) {
@@ -148,7 +143,7 @@ public class RentedSpacesFloor implements Floor {
         return size;
     }
 
-    public AbstractSpace[] getSpaces() {
+    public AbstractSpace[] toArray() {
         AbstractSpace[] abstractSpaces = new AbstractSpace[size];
         int i = 0;
         for (Space space : this) {
@@ -156,10 +151,6 @@ public class RentedSpacesFloor implements Floor {
             i++;
         }
         return abstractSpaces;
-    }
-
-    public boolean remove(Space space) {
-        return remove(indexOf(space)) == null;
     }
 
     @Override
@@ -178,7 +169,7 @@ public class RentedSpacesFloor implements Floor {
         }
         RentedSpacesFloor object = (RentedSpacesFloor) obj;
         return object.size() == size &&
-                Arrays.equals(object.getSpaces(), getSpaces());
+                Arrays.equals(object.toArray(), toArray());
     }
 
     @Override
@@ -194,6 +185,12 @@ public class RentedSpacesFloor implements Floor {
             result.append(space);
         }
         return result.toString();
+    }
+
+    @Override
+    public void clear() {
+        head = new Node<>();
+        size = DEFAULT_SIZE;
     }
 
     private void checkIndex(int index) {

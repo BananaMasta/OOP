@@ -1,8 +1,6 @@
 package OOP.model;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static OOP.model.Vehicle.isFormattedCurrectly;
 
@@ -95,22 +93,28 @@ public class Parking implements Iterable<Floor> {
         return size;
     }
 
-    public Floor[] getFloors() {
-        return floors;
+    public List<Floor> getFloors() {
+        return Arrays.asList(floors);
     }
 
-    public Vehicle[] getVehicles() {
-        Vehicle[] vehicles = new Vehicle[size];
-        int i = 0;
+    public Set<Floor> getFloors(Person person) {
+        Set<Floor> result = new HashSet<>();
         for (Floor floor : floors) {
-            for (Space space : floor.getSpaces()) {
-                if (space != null) {
-                    vehicles[i] = space.getVehicle();
-                    i++;
+            for (Space space : (Space[]) floor.toArray()) {
+                if (space.getPerson().equals(person)) {
+                    result.add(floor);
                 }
             }
         }
-        return vehicles;
+        return result;
+    }
+
+    public Collection<Vehicle> getVehicles() {
+        Collection<Vehicle> result = new ArrayList<>();
+        for (Floor floor : floors) {
+            result.addAll(floor.getVehicles());
+        }
+        return result;
     }
 
     public Floor[] sortedBySizeFloors() {
@@ -125,7 +129,7 @@ public class Parking implements Iterable<Floor> {
             throw new RegistrationNumberFormatException();
         }
         for (Floor floor : floors) {
-            for (AbstractSpace abstractSpace : floor.getSpaces())
+            for (AbstractSpace abstractSpace : (AbstractSpace[]) floor.toArray())
                 if (abstractSpace != null && abstractSpace.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
                     return abstractSpace;
                 }
@@ -142,7 +146,7 @@ public class Parking implements Iterable<Floor> {
         }
         AbstractSpace deletedAbstractSpace = null;
         for (int i = 0; i < size; i++) {
-            for (AbstractSpace space : floors[i].getSpaces())
+            for (AbstractSpace space : (AbstractSpace[]) floors[i].toArray())
                 if (space != null && space.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
                     deletedAbstractSpace = floors[i].remove(registrationNumber);
                 }
@@ -163,7 +167,7 @@ public class Parking implements Iterable<Floor> {
         }
         AbstractSpace replacedAbstractSpace = null;
         for (int i = 0; i < size; i++) {
-            for (int j = 0; j < floors[i].getSpaces().length; j++)
+            for (int j = 0; j < floors[i].toArray().length; j++)
                 if (space.getVehicle().getRegistrationNumber().equals(registrationNumber)) {
                     replacedAbstractSpace = floors[i].set(j, space);
                 }
@@ -178,7 +182,7 @@ public class Parking implements Iterable<Floor> {
     public int emptySpacesQuantity() {
         int result = 0;
         for (Floor floor : floors) {
-            for (Space space : floor.getSpaces()) {
+            for (Space space : (Space[]) floor.toArray()) {
                 if (space == null || space.IsEmpty()) {
                     result++;
                 }

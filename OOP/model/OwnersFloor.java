@@ -27,11 +27,11 @@ public class OwnersFloor implements Floor {
         size = spaces.length;
     }
 
-    public boolean add(AbstractSpace abstractSpace) {
+    public boolean add(Space space) {
         AbstractSpace[] copy = new AbstractSpace[spaces.length + 1];
         size++;
         System.arraycopy(spaces, 0, copy, 0, spaces.length);
-        copy[spaces.length] = abstractSpace;
+        copy[spaces.length] = (AbstractSpace) space;
         spaces = copy;
         return true;
     }
@@ -61,10 +61,6 @@ public class OwnersFloor implements Floor {
         return spaces[index];
     }
 
-    public boolean hasSpace(String registrationNumber) {
-        return get(registrationNumber) != null;
-    }
-
     public AbstractSpace set(int index, AbstractSpace abstractSpace) {
         checkIndex(index);
         if (abstractSpace == null) {
@@ -86,21 +82,18 @@ public class OwnersFloor implements Floor {
 
     public AbstractSpace remove(int index) {
         checkIndex(index);
-        AbstractSpace[] copy = new AbstractSpace[spaces.length - 1];
-        AbstractSpace deletedAbstractSpace = null;
-        int i = 0, j = 0;
-        while (i < size) {
+        AbstractSpace deletedAbstractSpace = spaces[index];
+        AbstractSpace[] copy = new AbstractSpace[size - 1];
+        int k = 0;
+        for (int i = 0; i < size; i++) {
             if (i != index) {
-                copy[j] = spaces[i];
-                j++;
-            } else {
-                deletedAbstractSpace = spaces[i];
-                size--;
+                copy[k] = spaces[i];
+                k++;
             }
-            i++;
         }
-        spaces = copy;
         if (deletedAbstractSpace != null) {
+            spaces = copy;
+            size--;
             return deletedAbstractSpace;
         } else {
             throw new NoSuchElementException();
@@ -139,15 +132,8 @@ public class OwnersFloor implements Floor {
         return size;
     }
 
-    public AbstractSpace[] getSpaces() {
+    public AbstractSpace[] toArray() {
         return spaces;
-    }
-
-    public boolean remove(Space space) {
-        if (space == null) {
-            throw new NullPointerException();
-        }
-        return remove(indexOf(space)) != null;
     }
 
     @Override
@@ -166,7 +152,7 @@ public class OwnersFloor implements Floor {
         }
         OwnersFloor object = (OwnersFloor) obj;
         return object.size() == size &&
-                Arrays.equals(object.getSpaces(), getSpaces());
+                Arrays.equals(object.toArray(), toArray());
     }
 
     @Override
@@ -182,6 +168,12 @@ public class OwnersFloor implements Floor {
             result.append(space);
         }
         return result.toString();
+    }
+
+    @Override
+    public void clear() {
+        spaces = new AbstractSpace[DEFAULT_CAPASITY];
+        size = 0;
     }
 
     private void checkIndex(int index) {

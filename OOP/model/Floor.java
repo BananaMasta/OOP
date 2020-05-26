@@ -1,13 +1,15 @@
 package OOP.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.NoSuchElementException;
 
 import static OOP.model.Vehicle.isFormattedCurrectly;
 
-public interface Floor extends Comparable<Floor>, Iterable<Space> {
+public interface Floor extends Comparable<Floor>, Iterable<Space>, Collection<Space> {
 
-    boolean add(AbstractSpace abstractSpace);
+    boolean add(Space abstractSpace);
 
     boolean add(int index, AbstractSpace abstractSpace);
 
@@ -28,7 +30,9 @@ public interface Floor extends Comparable<Floor>, Iterable<Space> {
         throw new NoSuchElementException();
     }
 
-    boolean hasSpace(String registrationNumber);
+    default boolean hasSpace(String registrationNumber) {
+        return get(registrationNumber) != null;
+    }
 
     AbstractSpace set(int index, AbstractSpace abstractSpace);
 
@@ -38,50 +42,35 @@ public interface Floor extends Comparable<Floor>, Iterable<Space> {
 
     int size();
 
-    AbstractSpace[] getSpaces();
+    Object[] toArray();
 
-    default Vehicle[] getVehicles() {
-        Vehicle[] vehicles = new Vehicle[size()];
-        int i = 0;
+    default ArrayList<Vehicle> getVehicles() {
+        ArrayList<Vehicle> result = new ArrayList<>();
         for (Space space : this) {
-            vehicles[i] = space.getVehicle();
-            i++;
+            result.add(space.getVehicle());
         }
-        return vehicles;
+        return result;
     }
 
-    default Space[] getSpaces(VehicleTypes vehicleType) {
-        if (vehicleType == null) {
-            throw new NullPointerException();
-        }
-        Space[] averageResult = new Space[size()];
-        int i = 0;
+    default ArrayList<Space> getSpaces(VehicleTypes vehicleType) {
+        ArrayList<Space> result = new ArrayList<>();
         for (Space space : this) {
             if (space.getVehicle().getType().equals(vehicleType)) {
-                averageResult[i] = space;
-                i++;
+                result.add(space);
             }
         }
-        Space[] result = new Space[i];
-        System.arraycopy(averageResult, 0, result, 0, i);
         return result;
     }
 
-    default Space[] getEmptySpaces() {
-        Space[] averageResult = new Space[size()];
-        int i = 0;
+    default ArrayList<Space> getEmptySpaces() {
+        ArrayList<Space> result = new ArrayList<>();
         for (Space space : this) {
             if (space.IsEmpty()) {
-                averageResult[i] = space;
-                i++;
+                result.add(space);
             }
         }
-        Space[] result = new Space[i];
-        System.arraycopy(averageResult, 0, result, 0, i);
         return result;
     }
-
-    boolean remove(Space space);
 
     default int indexOf(Space space) {
         if (space == null) {
@@ -151,4 +140,85 @@ public interface Floor extends Comparable<Floor>, Iterable<Space> {
 
     @Override
     String toString();
+
+    @Override
+    default boolean isEmpty() {
+        return size() == 0;
+    }
+
+    @Override
+    default boolean contains(Object o) {
+        for (Space space : this) {
+            if (space.equals(o)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    default <T> T[] toArray(T[] a) {
+        try {
+            return (T[]) toArray();
+        } catch (ClassCastException e) {
+            throw new ArrayStoreException();
+        }
+    }
+
+    @Override
+    default boolean remove(Object o) {
+        if (o == null) {
+            throw new NullPointerException();
+        }
+        return remove(indexOf((Space) o)) != null;
+    }
+
+    @Override
+    default boolean containsAll(Collection<?> c) {
+        for (Object o : c) {
+            boolean averageResult = false;
+            for (Space space : this) {
+                averageResult = space.equals(o);
+                if (averageResult) {
+                    break;
+                }
+            }
+            if (!averageResult) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    default boolean addAll(Collection<? extends Space> c) {
+        boolean result = true;
+        for (Object o : c) {
+            result = result && add((Space) o);
+        }
+        return result;
+    }
+
+    @Override
+    default boolean removeAll(Collection<?> c) {
+        for (Object o : c) {
+            remove(o);
+        }
+        return true;
+    }
+
+    @Override
+    default boolean retainAll(Collection<?> c) {
+        ArrayList<Space> listToRemove = new ArrayList<>();
+        for (Space space : this) {
+            if (!c.contains(space)) {
+                listToRemove.add(space);
+            }
+        }
+        removeAll(listToRemove);
+        return true;
+    }
+
+    @Override
+    void clear();
 }
